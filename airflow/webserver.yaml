@@ -54,7 +54,12 @@ spec:
             - name: pod-template
               mountPath: /opt/airflow/pod_template.yaml
               subPath: pod_template.yaml
+            - name: dags-volume
+              mountPath: /opt/airflow/dags
       volumes:
         - name: pod-template
           configMap:
             name: airflow-pod-template
+        - name: dags-volume
+          persistentVolumeClaim:
+            claimName: airflow-dags-pvc

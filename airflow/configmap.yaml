@@ -11,3 +11,4 @@ data:
   AIRFLOW__CORE__LOAD_EXAMPLES: "false"
   AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "false"
   AIRFLOW__KUBERNETES__POD_TEMPLATE_FILE: "/opt/airflow/pod_template.yaml"
+  AIRFLOW__CORE__DAGS_FOLDER: "/opt/airflow/dags/collector"

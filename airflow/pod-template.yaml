@@ -26,3 +26,10 @@ data:
                   key: POSTGRES_PASSWORD
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
               value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
+          volumeMounts:
+            - name: dags-volume
+              mountPath: /opt/airflow/dags
+      volumes:
+        - name: dags-volume
+          persistentVolumeClaim:
+            claimName: airflow-dags-pvc
