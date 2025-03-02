@@ -1,0 +1,40 @@
+name: Deploy to k8s
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  deploy-to-k8s:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Kubernetes
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Deploy Kubernetes resources
+        run: |
+          kubectl apply -f base/
+          kubectl apply -f postgres/
+          kubectl apply -f airflow/
+
+      - name: Apply Secrets
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: env
+            namespace: causality
+          type: Opaque
+          stringData:
+            AIRFLOW_WEBSERVER_SECRET_KEY: "${{ secrets.AIRFLOW_WEBSERVER_SECRET_KEY }}"
+            POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
+          EOF

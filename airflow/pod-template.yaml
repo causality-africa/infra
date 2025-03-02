@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: airflow-pod-template
+  namespace: causality
+data:
+  pod_template.yaml: |
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: airflow-worker-pod
+      labels:
+        app: airflow-worker
+    spec:
+      containers:
+        - name: airflow-worker
+          image: apache/airflow:2.10.5
+          envFrom:
+            - configMapRef:
+                name: airflow-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: POSTGRES_PASSWORD
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
