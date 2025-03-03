@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-scheduler
+  namespace: causality
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airflow-scheduler
+  template:
+    metadata:
+      labels:
+        app: airflow-scheduler
+    spec:
+      serviceAccountName: airflow
+      containers:
+        - name: airflow-scheduler
+          image: apache/airflow:2.10.5
+          command: ["airflow", "scheduler"]
+          envFrom:
+            - configMapRef:
+                name: airflow-config
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: POSTGRES_PASSWORD
+            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
+          volumeMounts:
+            - name: pod-template
+              mountPath: /opt/airflow/pod_template.yaml
+              subPath: pod_template.yaml
+            - name: dags-volume
+              mountPath: /opt/airflow/dags
+        - name: git-sync
+          image: registry.k8s.io/git-sync/git-sync:v3.6.9
+          env:
+            - name: GIT_SYNC_REPO
+              value: "https://github.com/causality-africa/collector.git"
+            - name: GIT_SYNC_BRANCH
+              value: "main"
+            - name: GIT_SYNC_ROOT
+              value: "/dags"
+            - name: GIT_SYNC_DEST
+              value: "collector"
+            - name: GIT_SYNC_WAIT
+              value: "3600"
+          volumeMounts:
+            - name: dags-volume
+              mountPath: /dags
+      volumes:
+        - name: pod-template
+          configMap:
+            name: airflow-pod-template
+        - name: dags-volume
+          persistentVolumeClaim:
+            claimName: airflow-dags-pvc
