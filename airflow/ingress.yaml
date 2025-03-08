@@ -3,15 +3,13 @@ kind: Ingress
 metadata:
   name: airflow-ingress
   namespace: causality
-  annotations:
-    cert-manager.io/cluster-issuer: lets-encrypt
 spec:
+  ingressClassName: tailscale
   tls:
     - hosts:
-        - airflow.causality.africa
-      secretName: airflow-tls
+        - airflow
   rules:
-    - host: airflow.causality.africa
+    - host: airflow
       http:
         paths:
           - path: /
