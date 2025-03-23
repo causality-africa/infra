@@ -24,6 +24,7 @@ jobs:
           kubectl apply -f base/
           kubectl apply -f postgres/
           kubectl apply -f airflow/
+          kubectl apply -f core/
 
       - name: Apply Secrets
         run: |
