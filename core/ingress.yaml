@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: core-ingress
+  namespace: causality
+  annotations:
+    cert-manager.io/cluster-issuer: lets-encrypt
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.causality.africa
+      secretName: core-svc-ingress-tls
+  rules:
+    - host: api.causality.africa
+      http:
+        paths:
+          - backend:
+              service:
+                name: core-svc
+                port:
+                  number: 443
+            path: /
+            pathType: Prefix

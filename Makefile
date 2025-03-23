@@ -7,3 +7,4 @@ deploy:
 	@kubectl apply -f base/
 	@kubectl apply -f postgres/
 	@kubectl apply -f airflow/
+	@kubectl apply -f core/
