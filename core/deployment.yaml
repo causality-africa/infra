@@ -24,8 +24,6 @@ spec:
           imagePullPolicy: Always
           command: ["/tern", "migrate", "--migrations", "migrations"]
           env:
-            - name: CORE_API_PORT
-              value: "8080"
             - name: CORE_DB_HOST
               value: "postgres-svc.causality.svc.cluster.local"
             - name: CORE_DB_PORT
