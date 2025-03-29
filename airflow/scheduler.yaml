@@ -4,10 +4,15 @@ metadata:
   name: airflow-scheduler
   namespace: causality
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: airflow-scheduler
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -16,19 +21,19 @@ spec:
       serviceAccountName: airflow
       containers:
         - name: airflow-scheduler
-          image: ghcr.io/causality-africa/collector:v0.2.0
+          image: ghcr.io/causality-africa/collector:v0.2.6
           command: ["airflow", "scheduler"]
           envFrom:
             - configMapRef:
                 name: airflow-config
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: env
                   key: POSTGRES_PASSWORD
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
           volumeMounts:
             - name: pod-template
               mountPath: /opt/airflow/pod_template.yaml
