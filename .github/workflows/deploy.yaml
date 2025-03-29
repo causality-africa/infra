@@ -21,10 +21,7 @@ jobs:
 
       - name: Deploy Kubernetes resources
         run: |
-          kubectl apply -f base/
-          kubectl apply -f postgres/
-          kubectl apply -f airflow/
-          kubectl apply -f core/
+          make deploy
 
       - name: Apply Secrets
         run: |

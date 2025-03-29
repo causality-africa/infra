@@ -4,10 +4,15 @@ metadata:
   name: airflow-webserver
   namespace: causality
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: airflow-webserver
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -15,22 +20,22 @@ spec:
     spec:
       initContainers:
         - name: init-db
-          image: ghcr.io/causality-africa/collector:v0.2.0
+          image: ghcr.io/causality-africa/collector:v0.2.6
           command: ["airflow", "db", "init"]
           envFrom:
             - configMapRef:
                 name: airflow-config
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: env
                   key: POSTGRES_PASSWORD
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
       containers:
         - name: airflow-webserver
-          image: ghcr.io/causality-africa/collector:v0.2.0
+          image: ghcr.io/causality-africa/collector:v0.2.6
           ports:
             - containerPort: 8080
           command: ["airflow", "webserver"]
@@ -38,8 +43,6 @@ spec:
             - configMapRef:
                 name: airflow-config
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
             - name: AIRFLOW__WEBSERVER__SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -50,6 +53,8 @@ spec:
                 secretKeyRef:
                   name: env
                   key: POSTGRES_PASSWORD
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
           volumeMounts:
             - name: pod-template
               mountPath: /opt/airflow/pod_template.yaml

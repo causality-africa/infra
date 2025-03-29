@@ -15,13 +15,11 @@ data:
       restartPolicy: Never
       containers:
         - name: airflow-worker
-          image: ghcr.io/causality-africa/collector:v0.2.0
+          image: ghcr.io/causality-africa/collector:v0.2.6
           envFrom:
             - configMapRef:
                 name: airflow-config
           env:
-            - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
-              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
             - name: B2_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -37,6 +35,8 @@ data:
                 secretKeyRef:
                   name: env
                   key: POSTGRES_PASSWORD
+            - name: AIRFLOW__DATABASE__SQL_ALCHEMY_CONN
+              value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
           volumeMounts:
             - name: dags-volume
               mountPath: /opt/airflow/dags
