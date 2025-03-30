@@ -2,6 +2,12 @@
 bootstrap:
 	@kubectl apply -f namespace.yaml
 
+
+.PHONY: patch
+patch:
+	@./patch.sh
+
+
 .PHONY: deploy
 deploy:
 	@kubectl apply -f base/

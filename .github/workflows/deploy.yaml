@@ -36,6 +36,7 @@ jobs:
             AIRFLOW_WEBSERVER_SECRET_KEY: "${{ secrets.AIRFLOW_WEBSERVER_SECRET_KEY }}"
             B2_ACCESS_KEY_ID: "${{ secrets.B2_ACCESS_KEY_ID }}"
             B2_SECRET_ACCESS_KEY: "${{ secrets.B2_SECRET_ACCESS_KEY }}"
+            COLLECTOR_SENTRY_DSN: "${{ secrets.COLLECTOR_SENTRY_DSN }}"
+            CORE_SENTRY_DSN: "${{ secrets.CORE_SENTRY_DSN }}"
             POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
-            SENTRY_DSN: "${{ secrets.SENTRY_DSN }}"
           EOF
