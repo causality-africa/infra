@@ -25,7 +25,7 @@ spec:
           command: ["/tern", "migrate", "--migrations", "migrations"]
           env:
             - name: CORE_DB_HOST
-              value: "postgres-svc.causality.svc.cluster.local"
+              value: postgres-svc.causality.svc.cluster.local
             - name: CORE_DB_PORT
               value: "5432"
             - name: CORE_DB_NAME
@@ -45,7 +45,11 @@ spec:
             - name: CORE_API_PORT
               value: "8080"
             - name: CORE_DB_HOST
-              value: "postgres-svc.causality.svc.cluster.local"
+              value: postgres-svc.causality.svc.cluster.local
+            - name: CORE_CACHE_HOST
+              value: valkey-svc.causality.svc.cluster.local
+            - name: CORE_CACHE_PORT
+              value: "6379"
             - name: CORE_DB_PORT
               value: "5432"
             - name: CORE_DB_NAME
@@ -57,6 +61,11 @@ spec:
                 secretKeyRef:
                   name: env
                   key: POSTGRES_PASSWORD
+            - name: CORE_OBSERVABILITY_SENTRYDSN
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: SENTRY_DSN
           ports:
             - containerPort: 8080
               protocol: TCP
