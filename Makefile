@@ -8,3 +8,4 @@ deploy:
 	@kubectl apply -f postgres/
 	@kubectl apply -f airflow/
 	@kubectl apply -f core/
+	@kubectl apply -f valkey/
