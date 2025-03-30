@@ -65,7 +65,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: env
-                  key: SENTRY_DSN
+                  key: CORE_SENTRY_DSN
           ports:
             - containerPort: 8080
               protocol: TCP

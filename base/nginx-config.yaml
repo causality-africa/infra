@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+data:
+  enable-real-ip: "true"
+  proxy-real-ip-cidr: "0.0.0.0/0"
+  compute-full-forwarded-for: "false"
+  forwarded-for-header: "X-Forwarded-For"

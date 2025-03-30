@@ -15,7 +15,7 @@ data:
       restartPolicy: Never
       containers:
         - name: airflow-worker
-          image: ghcr.io/causality-africa/collector:v0.2.7
+          image: ghcr.io/causality-africa/collector:v0.2.8
           envFrom:
             - configMapRef:
                 name: airflow-config
@@ -30,6 +30,11 @@ data:
                 secretKeyRef:
                   name: env
                   key: B2_SECRET_ACCESS_KEY
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: env
+                  key: COLLECTOR_SENTRY_DSN
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
