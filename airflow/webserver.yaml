@@ -20,7 +20,7 @@ spec:
     spec:
       initContainers:
         - name: init-db
-          image: ghcr.io/causality-africa/collector:v0.2.8
+          image: ghcr.io/causality-africa/collector:v0.2.9
           command: ["airflow", "db", "init"]
           envFrom:
             - configMapRef:
@@ -35,7 +35,7 @@ spec:
               value: postgresql+psycopg2://causality:$(POSTGRES_PASSWORD)@postgres-svc.causality.svc.cluster.local:5432/causality
       containers:
         - name: airflow-webserver
-          image: ghcr.io/causality-africa/collector:v0.2.8
+          image: ghcr.io/causality-africa/collector:v0.2.9
           ports:
             - containerPort: 8080
           command: ["airflow", "webserver"]
