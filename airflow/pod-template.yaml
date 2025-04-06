@@ -15,7 +15,7 @@ data:
       restartPolicy: Never
       containers:
         - name: airflow-worker
-          image: ghcr.io/causality-africa/collector:v0.2.8
+          image: ghcr.io/causality-africa/collector:v0.2.9
           envFrom:
             - configMapRef:
                 name: airflow-config
