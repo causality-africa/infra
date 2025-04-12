@@ -30,6 +30,8 @@ data:
                 secretKeyRef:
                   name: env
                   key: B2_SECRET_ACCESS_KEY
+            - name: B2_BUCKET_NAME
+              value: causality-africa
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:
